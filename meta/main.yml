@@ -1,0 +1,15 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: nidr0x
+  description: Nginx optimized for WordPress + WP-Rocket + Cloudflare.
+  license: "license (BSD, MIT)"
+  min_ansible_version: 1.8
+  platforms:
+    - name: Debian
+      versions:
+      - all
+  galaxy_tags:
+    - development
+    - web

@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+
+    location ~ /(\.DS_Store|wp-config.php|readme.html.gz|readme.txt.gz|readme.html|readme.txt|error_log|license.txt|changelog|changelog.txt) { access_log off; log_not_found off; deny all; }
+    location ~ ^/(wp-signup.php|xmlrpc.php|install.php) { access_log off; log_not_found off; deny all; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+    location = /favicon.ico { access_log off; log_not_found off; expires 30d; }
+    location ~ ~$           { access_log off; log_not_found off; deny all; }

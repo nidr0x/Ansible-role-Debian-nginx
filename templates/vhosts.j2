@@ -1,0 +1,85 @@
+# {{ ansible_managed }}
+
+{% for vhost in nginx_vhosts %}
+server {
+    listen {{ vhost.listen | default('80 default_server') }};
+{% if vhost.listen2 is defined %}
+    listen {{ vhost.listen2 }};
+{% endif %}       
+{% if vhost.server_name is defined %}
+    server_name {{ vhost.server_name }};
+{% endif %}
+{% if vhost.ssl_certificate is defined %}
+    ssl_certificate {{ vhost.ssl_certificate }};
+{% endif %}
+{% if vhost.ssl_certificate_key is defined %}
+    ssl_certificate_key {{ vhost.ssl_certificate_key }};
+{% endif %}
+{% if vhost.root is defined %}
+    root {{ vhost.root }};
+{% endif %}
+{% if vhost.index is defined %}
+    index {{ vhost.index }};
+{% endif %}    
+{% if vhost.error_page is defined %}
+    error_page {{ vhost.error_page }};
+{% endif %}
+{% if vhost.access_log is defined %}
+    access_log {{ vhost.access_log }};
+{% endif %}
+{% if vhost.error_log is defined %}
+    error_log {{ vhost.error_log }} error;
+{% endif %}
+{% if vhost.return is defined %}
+    return {{ vhost.return }};
+{% endif %}
+{% if vhost.redirection_file is defined %}
+    include {{ nginx_includes_path }}/{{ vhost.redirection_file }};
+{% endif %}
+{% if vhost.rocketwp is defined %}
+    include {{ nginx_includes_path }}/rocket-wp.conf;
+{% endif %}
+    include {{ nginx_includes_path }}/drop.conf;
+    include {{ nginx_includes_path }}/block.conf;
+{% if vhost.extra_parameters is defined %}
+    {{ vhost.extra_parameters|indent(4) }}
+{% endif %} 
+{% if vhost.wp_settings is defined %}
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+        }
+
+    rewrite /wp-admin$ $scheme://$host$uri/ permanent;
+
+    location ~ [^/]\.php(/|$) {
+    try_files $uri =404;
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;        
+    fastcgi_pass unix:/dev/shm/php-cgi.sock;
+    fastcgi_index index.php;
+    include fastcgi.conf;
+    }  
+
+    location ~* \.(js)$ {
+        add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+        access_log off;
+        expires 30d;
+        break;
+    }
+
+    location ~* \.(css)$ {
+            add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+            access_log off;
+            expires 30d;
+            break;
+            }
+
+    location ~* \.(eot|svg|ttf|woff|woff2)$ {
+        add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+        access_log off;
+        expires 30d;
+        break;
+        }
+
+{% endif %}
+}
+{% endfor %}                                 

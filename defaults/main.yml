@@ -1,0 +1,115 @@
+---
+# Used only for Debian/Ubuntu installation, as the -t option for apt.
+nginx_default_release: "1.13"
+
+# The name of the nginx apt/yum package to install.
+nginx_package_name: "nginx"
+
+nginx_user: "www-data"
+
+# Some configuration options
+# Enable only if you want to use Cloudflare
+nginx_cloudflare: "on"
+nginx_vhosts_filename: "{{ nginx_vhost_domain }}.conf"
+nginx_gzip: "on"
+nginx_gzip_buffers: "16 8k"
+nginx_gzip_comp_level: "6"
+nginx_gzip_http_version: "1.1"
+nginx_gzip_min_length: "256"
+nginx_gzip_proxied: "any"
+nginx_gzip_vary: "on"
+nginx_gzip_types:
+  - text/xml
+  - application/xml
+  - application/atom+xml
+  - application/rss+xml 
+  - application/xhtml+xml 
+  - image/svg+xml
+  - text/javascript 
+  - application/javascript 
+  - application/x-javascript
+  - text/x-json application/json 
+  - application/x-web-app-manifest+json
+  - text/css 
+  - text/plain 
+  - text/x-component
+  - font/opentype 
+  - application/x-font-ttf 
+  - application/vnd.ms-fontobject
+  - image/x-icon
+nginx_fastcgi_connect_timeout: "300"
+nginx_fastcgi_send_timeout: "300"
+nginx_fastcgi_read_timeout: "300"
+nginx_fastcgi_buffer_size: "64k"
+nginx_fastcgi_buffers: "4 64k"
+nginx_fastcgi_busy_buffers_size: "128k"
+nginx_fastcgi_temp_file_write_size: "128k"
+nginx_fastcgi_intercept_errors: "on"
+nginx_use: "epoll"
+nginx_worker_processes: "{{ ansible_processor_vcpus | default(ansible_processor_count) }}"
+nginx_worker_connections: "1024"
+nginx_multi_accept: "on"
+nginx_worker_rlimit_nofile: "51200"
+nginx_error_log: "/var/log/nginx/error.log warn"
+nginx_access_log: "/var/log/nginx/access.log main buffer=16k"
+nginx_sendfile: "on"
+nginx_tcp_nopush: "on"
+nginx_tcp_nodelay: "on"
+nginx_charset: "utf-8"
+nginx_keepalive_timeout: "65"
+nginx_keepalive_requests: "100"
+nginx_server_tokens: "off"
+nginx_client_max_body_size: "128m"
+nginx_server_names_hash_bucket_size: "128"
+nginx_proxy_cache_path: ""
+nginx_extra_conf_options: ""
+nginx_client_header_buffer_size: "64k"
+nginx_large_client_header_buffers: "4 32k"
+nginx_body_buffer_size: "10m"
+#If you have a lot of static files to serve through Nginx then caching of the files' metadata (not the actual files' contents) can save some latency
+nginx_open_file_cache: true
+
+
+# Example extra main options, used within the main nginx's context:
+#   nginx_extra_conf_options: |
+#     env VARIABLE;
+#     include /etc/nginx/main.d/*.conf;
+nginx_extra_http_options: ""
+
+# Example extra http options, printed inside the main server http config:
+#    nginx_extra_http_options: |
+#      proxy_buffering    off;
+#      proxy_set_header   X-Real-IP $remote_addr;
+#      proxy_set_header   X-Scheme $scheme;
+#      proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+#      proxy_set_header   Host $http_host;
+nginx_remove_default_vhost: true     
+
+# Example vhost below, showing all available options:
+# - listen: "80 default_server" # default: "80 default_server"
+#   server_name: "example.com" # default: N/A
+#   root: "/var/www/example.com" # default: N/A
+#   index: "index.html index.htm" # default: "index.html index.htm"
+#
+#   # Properties that are only added if defined:
+#   error_page: ""
+#   access_log: ""
+#   error_log: ""
+#   extra_parameters: "" # Can be used to add extra config blocks (multiline).
+
+nginx_upstreams: []
+# - name: myapp1
+#   strategy: "ip_hash" # "least_conn", etc.
+#   keepalive: 16 # optional
+#   servers: {
+#     "srv1.example.com",
+#     "srv2.example.com weight=3",
+#     "srv3.example.com"
+#   }
+
+
+nginx_log_format: |
+                main  '$remote_addr - $remote_user [$time_local] $request '
+                '"$status" $body_bytes_sent "$http_referer" '
+                '"$http_user_agent" "$http_x_forwarded_for" "$gzip_ratio"'
+                ' "$connection" "$connection_requests" "$request_time"'

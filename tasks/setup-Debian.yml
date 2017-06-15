@@ -1,0 +1,24 @@
+---
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=86400
+  changed_when: false
+
+- name: NGINX | Adding NGINX signing key
+  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
+
+- name: Add official nginx repository (Debian)
+  apt_repository:
+    repo: deb http://nginx.org/packages/debian/ jessie nginx
+    state: present
+    update_cache: yes
+
+- name: Add official nginx (deb-src) repository (Debian)
+  apt_repository:
+    repo: deb-src http://nginx.org/packages/debian/ jessie nginx
+    state: present
+    update_cache: yes    
+
+- name: Ensure nginx is installed.
+  apt:
+    name: "{{ nginx_package_name }}"
+    state: installed
