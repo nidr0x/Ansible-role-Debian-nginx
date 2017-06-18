@@ -23,7 +23,7 @@
     dest: "{{ nginx_path }}/fastcgi.conf"
     owner: root
     group: "{{ root_group }}"
-    mode: 0644
+    mode: 0644   
   notify:
     - reload nginx 
 
