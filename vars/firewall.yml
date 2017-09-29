@@ -1,0 +1,10 @@
+ufw_rules:
+  - rule: allow
+    interface: "{{ ansible_default_ipv4['interface'] }}"
+    to_port: 80
+    protocol: tcp
+      
+  - rule: allow
+    interface: "{{ ansible_default_ipv4['interface'] }}"
+    to_port: 443
+    protocol: tcp
