@@ -8,11 +8,10 @@ nginx_user: "www-data"
 
 # Some configuration options
 # Enable only if you want to use Cloudflare
-nginx_cloudflare: "on"
 nginx_vhosts_filename: "{{ nginx_vhost_domain }}.conf"
 nginx_gzip: "on"
 nginx_gzip_buffers: "16 8k"
-nginx_gzip_comp_level: "6"
+nginx_gzip_comp_level: "7"
 nginx_gzip_http_version: "1.1"
 nginx_gzip_min_length: "256"
 nginx_gzip_proxied: "any"
@@ -48,15 +47,15 @@ nginx_use: "epoll"
 nginx_worker_processes: "{{ ansible_processor_vcpus | default(ansible_processor_count) }}"
 nginx_worker_connections: "1024"
 nginx_multi_accept: "on"
-nginx_worker_rlimit_nofile: "51200"
+nginx_worker_rlimit_nofile: "200000"
 nginx_error_log: "/var/log/nginx/error.log warn"
 nginx_access_log: "/var/log/nginx/access.log main buffer=16k"
 nginx_sendfile: "on"
 nginx_tcp_nopush: "on"
 nginx_tcp_nodelay: "on"
 nginx_charset: "utf-8"
-nginx_keepalive_timeout: "65"
-nginx_keepalive_requests: "100"
+nginx_keepalive_timeout: "60 15"
+nginx_keepalive_requests: "100000"
 nginx_server_tokens: "off"
 nginx_client_max_body_size: "128m"
 nginx_server_names_hash_bucket_size: "128"
@@ -82,6 +81,7 @@ nginx_extra_http_options: ""
 #      proxy_set_header   X-Scheme $scheme;
 #      proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
 #      proxy_set_header   Host $http_host;
+
 nginx_remove_default_vhost: true     
 
 # Example vhost below, showing all available options:
@@ -108,7 +108,7 @@ nginx_upstreams: []
 
 
 nginx_log_format: |
-                main  '$remote_addr - $remote_user [$time_local] $request '
+                '$remote_addr - $remote_user [$time_local] $request '
                 '"$status" $body_bytes_sent "$http_referer" '
                 '"$http_user_agent" "$http_x_forwarded_for" "$gzip_ratio"'
                 ' "$connection" "$connection_requests" "$request_time"'
