@@ -65,26 +65,7 @@ server {
     include fastcgi.conf;
     }  
 
-    location ~* \.(js)$ {
-        add_header Cache-Control "public, must-revalidate, proxy-revalidate";
-        access_log off;
-        expires 30d;
-        break;
-    }
-
-    location ~* \.(css)$ {
-            add_header Cache-Control "public, must-revalidate, proxy-revalidate";
-            access_log off;
-            expires 30d;
-            break;
-            }
-
-    location ~* \.(eot|svg|ttf|woff|woff2)$ {
-        add_header Cache-Control "public, must-revalidate, proxy-revalidate";
-        access_log off;
-        expires 30d;
-        break;
-        }
+    include {{ nginx_includes_path }}/static.conf;
 {% endif %}
 {% if vhost.ssl_params is defined %}
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
