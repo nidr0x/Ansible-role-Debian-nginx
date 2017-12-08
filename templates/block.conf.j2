@@ -1,10 +1,5 @@
 # {{ ansible_managed }}
 
-# Block PHP files in uploads, content, and includes directory.
-location ~* /(?:uploads|files|wp-content|wp-includes)/.*\.php$ {
-  deny all;
-}
-
 # prevent .zip, .gz, .tar, .bzip2 files from being accessed by default
 # impossible for centmin mod to know which wp backup plugins they installed
 # which may save backups to directories in wp-content/
@@ -20,17 +15,3 @@ location ~* /(?:uploads|files)/.*\.php$ {
 deny all;
 }
 
-location ~* /(?:uploads|files|wp-content|wp-includes)/.*\.php$ {
-  deny all;
-}
-
-# Prevent enumeration of users in wp
-
-if ($args ~ "^/?author=([0-9]*)"){
-        set $rule_0 1$rule_0;
-}
-
-if ($rule_0 = "1"){
-        rewrite ^/$ http://edwiget.name/404 permanent;
-}
-~
