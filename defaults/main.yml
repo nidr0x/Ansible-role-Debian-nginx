@@ -1,6 +1,4 @@
 ---
-include_vars: firewall.yml
-
 # The name of the nginx apt/yum package to install.
 nginx_package_name: "nginx"
 
@@ -67,7 +65,6 @@ nginx_large_client_header_buffers: "4 32k"
 nginx_body_buffer_size: "10m"
 #If you have a lot of static files to serve through Nginx then caching of the files' metadata (not the actual files' contents) can save some latency
 nginx_open_file_cache: true
-
 
 # Example extra main options, used within the main nginx's context:
 #   nginx_extra_conf_options: |

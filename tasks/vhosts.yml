@@ -27,6 +27,37 @@
   notify:
     - reload nginx 
 
+- name: Check if got any SSL certs installed (needed for start nginx)
+  stat:
+    path: /etc/nginx/certificates/*.*    
+  tags: ssl
+  register: certificates_check  
+
+- name: Create /etc/nginx/certificates/ (if not exists)
+  file:
+    path: /etc/nginx/certificates/
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+  when: certificates_check.stat.exists == False
+  tags: ssl
+
+- name: Generate self signed SSL certificates
+  command: >
+    openssl req
+      -x509    
+      -nodes    
+      -days 365        
+      -newkey rsa:2048
+      -subj "/C=US/ST=NY/L=NY/O=NA/CN=${ansible_fqdn}"
+      -keyout /etc/nginx/certificates/{{ nginx_vhost_domain }}.key
+      -out /etc/nginx/certificates/{{ nginx_vhost_domain }}.pem
+  args:
+    creates: '/etc/nginx/certificates/{{ nginx_vhost_domain }}.pem'
+  when: certificates_check.stat.exists == False
+  tags: ssl
+
 - name: Adding WP-Rocket configuration file.
   template:
     src: rocket-wp.conf.j2
@@ -45,7 +76,17 @@
     group: "{{ root_group }}"
     mode: 0644
   notify:
-    - reload nginx  
+    - reload nginx
+
+- name: Adding static configuration file.
+  template:
+    src: static.conf.j2
+    dest: "{{ nginx_includes_path }}/static.conf"
+    owner: root
+    group: "{{ root_group }}"
+    mode: 0644
+  notify:
+    - reload nginx       
 
 - name: Adding block attacks configuration file.
   template:
@@ -77,6 +118,7 @@
     mode: 0644
   when: nginx_vhosts|length > 0
   notify: reload nginx
+  tags: vhost
 
 - name: Remove managed vhost config file (if no vhosts are configured).
   file:
@@ -84,6 +126,7 @@
     state: absent
   when: nginx_vhosts|length == 0
   notify: reload nginx
+  tags: vhost
 
 - name: Create defined vhost root folder (if not exists).
   file:
