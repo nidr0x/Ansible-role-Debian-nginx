@@ -76,17 +76,7 @@
     group: "{{ root_group }}"
     mode: 0644
   notify:
-    - reload nginx
-
-- name: Adding static configuration file.
-  template:
-    src: static.conf.j2
-    dest: "{{ nginx_includes_path }}/static.conf"
-    owner: root
-    group: "{{ root_group }}"
-    mode: 0644
-  notify:
-    - reload nginx       
+    - reload nginx    
 
 - name: Adding block attacks configuration file.
   template:

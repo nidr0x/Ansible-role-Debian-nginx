@@ -6,7 +6,7 @@ nginx_user: "www-data"
 
 # Some configuration options
 # Enable only if you want to use Cloudflare
-nginx_cloudflare: "on"
+nginx_cloudflare: "off"
 nginx_vhosts_filename: "{{ nginx_vhost_domain }}.conf"
 nginx_gzip: "on"
 nginx_gzip_buffers: "16 8k"
