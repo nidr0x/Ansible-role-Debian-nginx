@@ -2,14 +2,19 @@
 
 {% for vhost in nginx_vhosts %}
 server {
+{% if vhost.listen_http is defined %}
     listen {{ vhost.listen | default('80 default_server') }};
+{% endif %}
 {% if vhost.redirect_http_to_https is defined %}
     server_name {{ nginx_vhost_domain }} www.{{ nginx_vhost_domain }};
     return 301 https://www.$server_name$request_uri;   
 {% endif %}     
-{% if vhost.listen2 is defined %}
-    listen {{ vhost.listen2 }};
+{% if vhost.listen_https is defined %}
+    listen {{ vhost.listen_https }};
 {% endif %}      
+{% if vhost.listen_varnish is defined %}
+    listen {{ vhost.listen_varnish | default('10080') }};
+{% endif %}
 {% if vhost.server_name is defined %}
     server_name {{ vhost.server_name }};
 {% endif %}
