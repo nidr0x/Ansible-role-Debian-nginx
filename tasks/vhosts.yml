@@ -7,6 +7,10 @@
     owner: root
     group: root
 
+- name: Checking if any redirection file exists
+  local_action: stat path="{{ nginx_includes_path }}/redirection.conf"
+  register: nginx_redirection_exists  
+
 - name: Adding redirection file.
   template:
     src: redirection.conf.j2
@@ -14,6 +18,7 @@
     owner: root
     group: "{{ root_group }}"
     mode: 0644
+  when: nginx_redirection_exists.stat.exists == true  
   notify:
     - reload nginx
 
@@ -77,16 +82,6 @@
     mode: 0644
   notify:
     - reload nginx
-
-- name: Adding static configuration file.
-  template:
-    src: static.conf.j2
-    dest: "{{ nginx_includes_path }}/static.conf"
-    owner: root
-    group: "{{ root_group }}"
-    mode: 0644
-  notify:
-    - reload nginx       
 
 - name: Adding block attacks configuration file.
   template:

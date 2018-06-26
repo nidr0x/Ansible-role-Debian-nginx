@@ -1,7 +1,6 @@
 ---
 # The name of the nginx apt/yum package to install.
 nginx_package_name: "nginx"
-
 nginx_user: "www-data"
 
 # Some configuration options
