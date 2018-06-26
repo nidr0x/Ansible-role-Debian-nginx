@@ -1,6 +1,5 @@
 ---
 # Variable setup.
-
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml"
 
@@ -10,7 +9,6 @@
   when: nginx_user is not defined
 
 # Setup/install tasks.
-
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'
 
